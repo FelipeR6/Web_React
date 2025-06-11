@@ -1,22 +1,29 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useEstadisticas, useEquipos, useMantenimientos, usePrestamos, useUsuarios } from "../hooks/useApi"
-import "../assets/css/inicio.css"
-import "../assets/css/stats-cards.css"
-import { usePerfil } from "../hooks/usePerfil"
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  useEstadisticas,
+  useEquipos,
+  useMantenimientos,
+  usePrestamos,
+  useUsuarios,
+} from "../hooks/useApi";
+import "../assets/css/inicio.css";
+import "../assets/css/stats-cards.css";
+import { usePerfil } from "../hooks/usePerfil";
 
 const Inicio = () => {
-  const navigate = useNavigate()
-  const { data: estadisticasData, loading: loadingStats } = useEstadisticas()
-  const { data: equipos, loading: loadingEquipos } = useEquipos()
-  const { data: mantenimientos, loading: loadingMantenimientos } = useMantenimientos()
-  const { data: prestamos, loading: loadingPrestamos } = usePrestamos()
-  const { data: usuarios, loading: loadingUsuarios } = useUsuarios()
+  const navigate = useNavigate();
+  const { data: estadisticasData, loading: loadingStats } = useEstadisticas();
+  const { data: equipos, loading: loadingEquipos } = useEquipos();
+  const { data: mantenimientos, loading: loadingMantenimientos } =
+    useMantenimientos();
+  const { data: prestamos, loading: loadingPrestamos } = usePrestamos();
+  const { data: usuarios, loading: loadingUsuarios } = useUsuarios();
 
-  const [temaOscuro, setTemaOscuro] = useState(true)
-  const { perfil, loading: loadingPerfil } = usePerfil()
+  const [temaOscuro, setTemaOscuro] = useState(true);
+  const { perfil, loading: loadingPerfil } = usePerfil();
 
   // Calcular estadísticas en tiempo real
   const [estadisticas, setEstadisticas] = useState({
@@ -27,11 +34,11 @@ const Inicio = () => {
     equiposActivos: 0,
     mantenimientosPendientes: 0,
     prestamosActivos: 0,
-  })
+  });
 
   useEffect(() => {
-    document.body.classList.toggle("dark", temaOscuro)
-  }, [temaOscuro])
+    document.body.classList.toggle("dark", temaOscuro);
+  }, [temaOscuro]);
 
   useEffect(() => {
     // Actualizar estadísticas cuando los datos cambien
@@ -47,21 +54,31 @@ const Inicio = () => {
         ? mantenimientos.filter((m) => !m.Fecha_fin_mantenimiento).length
         : 0,
       prestamosActivos: Array.isArray(prestamos)
-        ? prestamos.filter((p) => !p.Fecha_entrega_prestamo || new Date(p.Fecha_entrega_prestamo) > new Date()).length
+        ? prestamos.filter(
+            (p) =>
+              !p.Fecha_entrega_prestamo ||
+              new Date(p.Fecha_entrega_prestamo) > new Date()
+          ).length
         : 0,
-    }
-    setEstadisticas(nuevasEstadisticas)
-  }, [equipos, mantenimientos, prestamos, usuarios])
+    };
+    setEstadisticas(nuevasEstadisticas);
+  }, [equipos, mantenimientos, prestamos, usuarios]);
 
   const toggleTheme = () => {
-    setTemaOscuro(!temaOscuro)
-  }
+    setTemaOscuro(!temaOscuro);
+  };
 
   const handleLogout = () => {
-    navigate("/home")
-  }
+    navigate("/home");
+  };
 
-  const isLoading = loadingStats || loadingEquipos || loadingMantenimientos || loadingPrestamos || loadingUsuarios || loadingPerfil
+  const isLoading =
+    loadingStats ||
+    loadingEquipos ||
+    loadingMantenimientos ||
+    loadingPrestamos ||
+    loadingUsuarios ||
+    loadingPerfil;
 
   return (
     <div className="dashboard">
@@ -71,7 +88,11 @@ const Inicio = () => {
           <div className="theme-toggle">
             <i className="fa-solid fa-sun sun"></i>
             <label className="switch">
-              <input type="checkbox" checked={temaOscuro} onChange={toggleTheme} />
+              <input
+                type="checkbox"
+                checked={temaOscuro}
+                onChange={toggleTheme}
+              />
               <span className="slider"></span>
             </label>
             <i className="fa-solid fa-moon moon"></i>
@@ -92,7 +113,7 @@ const Inicio = () => {
               </div>
             </div>
           </Link>
-
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1" || perfil?.Id_rol == "3") && (
           <Link to="/inventario" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow inventory-glow"></div>
@@ -106,21 +127,23 @@ const Inicio = () => {
               </div>
             </div>
           </Link>
-
-          <Link to="/mantenimiento" className="nav-item">
-            <div className="nav-link-wrapper">
-              <div className="item-glow maintenance-glow"></div>
-              <div className="nav-link-front">
-                <i className="fas fa-tools nav-icon maintenance-icon"></i>
-                <span>Mantenimiento</span>
+          )}
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1") && (
+            <Link to="/mantenimiento" className="nav-item">
+              <div className="nav-link-wrapper">
+                <div className="item-glow maintenance-glow"></div>
+                <div className="nav-link-front">
+                  <i className="fas fa-tools nav-icon maintenance-icon"></i>
+                  <span>Mantenimiento</span>
+                </div>
+                <div className="nav-link-back">
+                  <i className="fas fa-tools nav-icon maintenance-icon"></i>
+                  <span>Mantenimiento</span>
+                </div>
               </div>
-              <div className="nav-link-back">
-                <i className="fas fa-tools nav-icon maintenance-icon"></i>
-                <span>Mantenimiento</span>
-              </div>
-            </div>
-          </Link>
-
+            </Link>
+          )}
+          {(perfil?.Id_rol == "4" || perfil?.Id_rol == "1") && (
           <Link to="/Administracion" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow maintenance-glow"></div>
@@ -134,7 +157,8 @@ const Inicio = () => {
               </div>
             </div>
           </Link>
-
+         )}
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1" || perfil?.Id_rol == "3") && (
           <Link to="/prestamo" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow lifecycle-glow"></div>
@@ -148,7 +172,8 @@ const Inicio = () => {
               </div>
             </div>
           </Link>
-
+          )}
+          
           <Link to="/perfil" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow profile-glow"></div>
@@ -188,10 +213,14 @@ const Inicio = () => {
 
           {perfil && (
             <div className="user-profile">
-              <div className="user-avatar">{perfil.Usuario.charAt(0).toUpperCase()}</div>
+              <div className="user-avatar">
+                {perfil.Usuario.charAt(0).toUpperCase()}
+              </div>
               <div className="user-info">
                 <div className="user-name">{perfil.Usuario}</div>
-                <div className="user-role">Rol: {perfil.Nombre_rol || perfil.Id_rol}</div>
+                <div className="user-role">
+                  Rol: {perfil.Nombre_rol || perfil.Id_rol}
+                </div>
               </div>
             </div>
           )}
@@ -211,7 +240,9 @@ const Inicio = () => {
                 </div>
                 <div className="stat-value">{estadisticas.equipos}</div>
                 <div className="stat-label">Equipos Registrados</div>
-                <div className="stat-sublabel">{estadisticas.equiposActivos} activos</div>
+                <div className="stat-sublabel">
+                  {estadisticas.equiposActivos} activos
+                </div>
               </div>
 
               <div className="stat-card">
@@ -220,7 +251,9 @@ const Inicio = () => {
                 </div>
                 <div className="stat-value">{estadisticas.mantenimientos}</div>
                 <div className="stat-label">Mantenimientos</div>
-                <div className="stat-sublabel">{estadisticas.mantenimientosPendientes} pendientes</div>
+                <div className="stat-sublabel">
+                  {estadisticas.mantenimientosPendientes} pendientes
+                </div>
               </div>
 
               <div className="stat-card">
@@ -229,7 +262,9 @@ const Inicio = () => {
                 </div>
                 <div className="stat-value">{estadisticas.prestamos}</div>
                 <div className="stat-label">Préstamos</div>
-                <div className="stat-sublabel">{estadisticas.prestamosActivos} activos</div>
+                <div className="stat-sublabel">
+                  {estadisticas.prestamosActivos} activos
+                </div>
               </div>
 
               <div className="stat-card">
@@ -245,6 +280,7 @@ const Inicio = () => {
         </section>
 
         <section className="cards-container">
+        {(perfil?.Id_rol == "1") && (
           <div className="card" onClick={() => navigate("/consultar")}>
             <div className="card-icon">
               <i className="fas fa-search"></i>
@@ -252,6 +288,8 @@ const Inicio = () => {
             <h3>Consultar</h3>
             <p>Consulta los registros de inventario y préstamo</p>
           </div>
+          )}
+          {(perfil?.Id_rol == "4" || perfil?.Id_rol == "1") && (
           <div className="card" onClick={() => navigate("/historial")}>
             <div className="card-icon">
               <i className="fas fa-history"></i>
@@ -259,6 +297,7 @@ const Inicio = () => {
             <h3>Historial</h3>
             <p>Consulta el historial de acciones y registros anteriores</p>
           </div>
+          )}
           <div className="card" onClick={() => navigate("/pqrs")}>
             <div className="card-icon">
               <i className="fas fa-comment-dots"></i>
@@ -266,6 +305,7 @@ const Inicio = () => {
             <h3>PQRS</h3>
             <p>Envía tus peticiones, quejas, reclamos y sugerencias</p>
           </div>
+          {(perfil?.Id_rol == "1") && (
           <div className="card" onClick={() => navigate("/registros")}>
             <div className="card-icon">
               <i className="fas fa-clipboard-list"></i>
@@ -273,6 +313,8 @@ const Inicio = () => {
             <h3>Registros</h3>
             <p>Realiza registros de inventario y dispositivos</p>
           </div>
+          )}
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1") && (
           <div className="card" onClick={() => navigate("/hojavida")}>
             <div className="card-icon">
               <i className="fas fa-clipboard-list"></i>
@@ -280,6 +322,8 @@ const Inicio = () => {
             <h3>Hoja De Vida</h3>
             <p>Consultar la Hoja de vida de los equipos</p>
           </div>
+          )}
+          {(perfil?.Id_rol == "4" || perfil?.Id_rol == "1") && (
           <div className="card" onClick={() => navigate("/auditoria")}>
             <div className="card-icon">
               <i className="fas fa-shield-alt"></i>
@@ -287,10 +331,11 @@ const Inicio = () => {
             <h3>Auditoría</h3>
             <p>Historial de acciones y cambios en el sistema</p>
           </div>
+          )}
         </section>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Inicio
+export default Inicio;
