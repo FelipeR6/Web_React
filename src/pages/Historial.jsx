@@ -7,8 +7,11 @@ import "../assets/css/inicio.css"
 import "../assets/css/tablas.css"
 import "../assets/css/modal.css"
 import UserProfile from "../components/UserProfile"
+import { usePerfil } from "../hooks/usePerfil";
+
 
 const Historial = () => {
+  const { perfil } = usePerfil(); 
   const { data: historialEntries, loading, error } = useHistorial()
   const [searchTerm, setSearchTerm] = useState("")
   const [temaOscuro, setTemaOscuro] = useState(true)
@@ -46,7 +49,7 @@ const Historial = () => {
     return <div>Error: {error}</div>
   }
 
-  return (
+ return (
     <div className="dashboard">
       <aside className="sidebar">
         <div className="sidebar-header">
@@ -54,7 +57,11 @@ const Historial = () => {
           <div className="theme-toggle">
             <i className="fa-solid fa-sun sun"></i>
             <label className="switch">
-              <input type="checkbox" checked={temaOscuro} onChange={toggleTheme} />
+              <input
+                type="checkbox"
+                checked={temaOscuro}
+                onChange={toggleTheme}
+              />
               <span className="slider"></span>
             </label>
             <i className="fa-solid fa-moon moon"></i>
@@ -75,7 +82,7 @@ const Historial = () => {
               </div>
             </div>
           </Link>
-
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1" || perfil?.Id_rol == "3") && (
           <Link to="/inventario" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow inventory-glow"></div>
@@ -89,21 +96,23 @@ const Historial = () => {
               </div>
             </div>
           </Link>
-
-          <Link to="/mantenimiento" className="nav-item">
-            <div className="nav-link-wrapper">
-              <div className="item-glow maintenance-glow"></div>
-              <div className="nav-link-front">
-                <i className="fas fa-tools nav-icon maintenance-icon"></i>
-                <span>Mantenimiento</span>
+          )}
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1") && (
+            <Link to="/mantenimiento" className="nav-item">
+              <div className="nav-link-wrapper">
+                <div className="item-glow maintenance-glow"></div>
+                <div className="nav-link-front">
+                  <i className="fas fa-tools nav-icon maintenance-icon"></i>
+                  <span>Mantenimiento</span>
+                </div>
+                <div className="nav-link-back">
+                  <i className="fas fa-tools nav-icon maintenance-icon"></i>
+                  <span>Mantenimiento</span>
+                </div>
               </div>
-              <div className="nav-link-back">
-                <i className="fas fa-tools nav-icon maintenance-icon"></i>
-                <span>Mantenimiento</span>
-              </div>
-            </div>
-          </Link>
-
+            </Link>
+          )}
+          {(perfil?.Id_rol == "4" || perfil?.Id_rol == "1") && (
           <Link to="/Administracion" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow maintenance-glow"></div>
@@ -117,7 +126,8 @@ const Historial = () => {
               </div>
             </div>
           </Link>
-
+         )}
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1" || perfil?.Id_rol == "3") && (
           <Link to="/prestamo" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow lifecycle-glow"></div>
@@ -131,7 +141,8 @@ const Historial = () => {
               </div>
             </div>
           </Link>
-
+          )}
+          
           <Link to="/perfil" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow profile-glow"></div>
@@ -161,6 +172,7 @@ const Historial = () => {
           </div>
         </nav>
       </aside>
+
 
       <main className="content">
         <div className="top-bar">
