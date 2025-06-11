@@ -8,8 +8,11 @@ import "../assets/css/inicio.css"
 import "../assets/css/tablas.css"
 import "../assets/css/modal.css"
 import UserProfile from "../components/UserProfile"
+import { usePerfil } from "../hooks/usePerfil";
+
 
 const Administracion = () => {
+  const { perfil } = usePerfil(); 
   const { data: usuarios, loading, error, refetch } = useUsuarios()
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
@@ -176,7 +179,11 @@ const Administracion = () => {
           <div className="theme-toggle">
             <i className="fa-solid fa-sun sun"></i>
             <label className="switch">
-              <input type="checkbox" checked={temaOscuro} onChange={toggleTheme} />
+              <input
+                type="checkbox"
+                checked={temaOscuro}
+                onChange={toggleTheme}
+              />
               <span className="slider"></span>
             </label>
             <i className="fa-solid fa-moon moon"></i>
@@ -197,7 +204,7 @@ const Administracion = () => {
               </div>
             </div>
           </Link>
-
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1" || perfil?.Id_rol == "3") && (
           <Link to="/inventario" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow inventory-glow"></div>
@@ -211,21 +218,23 @@ const Administracion = () => {
               </div>
             </div>
           </Link>
-
-          <Link to="/mantenimiento" className="nav-item">
-            <div className="nav-link-wrapper">
-              <div className="item-glow maintenance-glow"></div>
-              <div className="nav-link-front">
-                <i className="fas fa-tools nav-icon maintenance-icon"></i>
-                <span>Mantenimiento</span>
+          )}
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1") && (
+            <Link to="/mantenimiento" className="nav-item">
+              <div className="nav-link-wrapper">
+                <div className="item-glow maintenance-glow"></div>
+                <div className="nav-link-front">
+                  <i className="fas fa-tools nav-icon maintenance-icon"></i>
+                  <span>Mantenimiento</span>
+                </div>
+                <div className="nav-link-back">
+                  <i className="fas fa-tools nav-icon maintenance-icon"></i>
+                  <span>Mantenimiento</span>
+                </div>
               </div>
-              <div className="nav-link-back">
-                <i className="fas fa-tools nav-icon maintenance-icon"></i>
-                <span>Mantenimiento</span>
-              </div>
-            </div>
-          </Link>
-
+            </Link>
+          )}
+          {(perfil?.Id_rol == "4" || perfil?.Id_rol == "1") && (
           <Link to="/Administracion" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow maintenance-glow"></div>
@@ -239,7 +248,8 @@ const Administracion = () => {
               </div>
             </div>
           </Link>
-
+         )}
+          {(perfil?.Id_rol == "2" || perfil?.Id_rol == "1" || perfil?.Id_rol == "3") && (
           <Link to="/prestamo" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow lifecycle-glow"></div>
@@ -253,7 +263,8 @@ const Administracion = () => {
               </div>
             </div>
           </Link>
-
+          )}
+          
           <Link to="/perfil" className="nav-item">
             <div className="nav-link-wrapper">
               <div className="item-glow profile-glow"></div>
